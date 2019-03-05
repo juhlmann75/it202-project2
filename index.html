@@ -109,13 +109,14 @@
       
 
     <script>
+      
       $(document).ready(function() {
     
         var endpoint = "https://data.cityofchicago.org/resource/cdmx-wzbz.json";
           
          $("#getFormData").on("click", function() {
              endpoint = "https://data.cityofchicago.org/resource/cdmx-wzbz.json";
-            
+                DeleteMarkers();
              $(".result").remove();
              
              var searchWard = $("#ward").val();
@@ -131,7 +132,7 @@
               //console.log(response);
 
               var data = response;
-
+              initMap(response);
               $.each(data, function(i,v){
                 //console.log(i,v);
 
@@ -168,7 +169,7 @@
 
                 // insert into DOM
                 $("#cards").append(clone);
-
+                
               });
 
 
@@ -197,48 +198,51 @@
     </script>
       <script>
 // Initialize and add the map
-function initMap() {
-  // The location of Uluru
-  var chicago = {lat: 41.8781, lng: -87.6298};
+var markers = [];
+function initMap(data) {
+
   // The map, centered at Uluru
   var map = new google.maps.Map(
-      document.getElementById('map'), {zoom: 11, center: chicago});
-
-  $.get("https://data.cityofchicago.org/resource/cwig-ma7x.json?$limit=5",
-
-      function(response) {
-        console.log("in data callback");
-        var data = response;
-        createMarkers(map, data );
-      });
+      document.getElementById('map'), {zoom: 14, center: {lat: 41.881, lng: -87.623}});
+    
+  createMarkers(map, data);
 
 }
 
   function createMarkers (map, data) {
-    console.log(data);
+   
     $.each(data, function(i,v) {
 
-      var location = {lat: parseFloat(v.latitude), lng: parseFloat(v.longitude) }
-      
-      var marker = new google.maps.Marker({position: location, map: map});
+      var location = new google.maps.LatLng(parseFloat(v.latitude),parseFloat(v.longitude));
+    
+      map.setCenter(location);  
+        
+      var marker = new google.maps.Marker({map: map, position: location});
 
       var infowindow = new google.maps.InfoWindow({
-        content: v.dba_name
+        content: v.street_address
       });
 
       marker.addListener('click', function() {
         infowindow.open(map, marker);
       });
-
+      markers.push(marker);
+  
     });
 
   }
-
-
+          
+function DeleteMarkers() {
+        //Loop through all the markers and remove
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+        markers = [];
+    };
 
     </script>
      <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa4dMSOASs_iLQnhrPoQ8EZgj2Im_pZ7o&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa4dMSOASs_iLQnhrPoQ8EZgj2Im_pZ7o">
     </script>
   </body>
 </html>
