@@ -44,20 +44,34 @@
       
       <form>
   <div class="form-group">
-    <label for="title">Title</label>
-    <input type="text" class="form-control" id="title" placeholder="Title">
+    <label for="ward">Ward</label>
+    <input type="text" class="form-control" id="ward" placeholder="Ward">
   </div>
   <div class="form-group">
-    <label for="description">Description</label>
-    <textarea class="form-control" id="description" rows="3" placeholder="Description"></textarea>
+    <label for="status">Status</label>
+    <select class="form-control" id="status">
+        <option value="">All</option>
+        <option value="Open">Open</option>
+        <option value="Completed">Completed</option>
+      </select>
   </div>
 </form>
-    <button id="getFormData">Submit</button>
+    <button id="getFormData">Search</button>
   </div>
-  <div class="content" id="list">
-    <ul class="list-group" id="noteList">
-        
-      </ul>
+  <div class="content" id="list" >
+    <div id="cards">
+
+        <div class="card template" style="width: 18rem;display:none;float:left;">
+            <div class="card-body">
+                <h5 class="card-address">Card Address</h5>
+                <h6 class="card-number mb-2 text-muted">Card request number</h6>
+                <p class="card-location">location</p>
+                <p class="card-surface"></p>
+                <p class="card-created"></p>
+                <p class="card-completed"></p>
+            </div>
+        </div>
+     </div>
   </div>
   <div class="content" id="map">
     <div id="desc">
@@ -95,54 +109,62 @@
     <script>
       $(document).ready(function() {
     
-        var url = "https://data.cityofchicago.org/resource/cdmx-wzbz.json";
+        var endpoint = "https://data.cityofchicago.org/resource/cdmx-wzbz.json";
           
          $("#getFormData").on("click", function() {
-        // clear the display
-        //$("#cards").empty();
-        //var searchString = $("#zip").val();
-       // console.log(searchString);
-        //var url = endpoint + "&zip=" + searchString;
-        //console.log(url);
+             endpoint = "https://data.cityofchicago.org/resource/cdmx-wzbz.json";
+            
+             $(".result").remove();
+             
+             var searchWard = $("#ward").val();
+             var searchStatus = $("#status").val();
+
+             var url = endpoint + "?ward=" + searchWard;
+             if(!searchStatus == ""){
+                 url += "&status=" + searchStatus;
+             }
+
 
           $.get(url, function(response) {
               console.log(response);
 
-
               var data = response;
 
-             // $.each(data, function(i,v){
-                //console.log(i,v);
-/*
+              $.each(data, function(i,v){
+                console.log(i,v);
+
                 // clone card
                 var clone = $(".template").clone();
                 // update values
-                clone.find(".card-title").text(v.dba_name);
+                clone.find(".card-address").text(v.street_address);
+                clone.find(".card-number").text(v.service_request_number);
+                clone.find(".card-location").text(v.where_is_the_graffiti_located_);
+                clone.find(".card-surface").text(v.what_type_of_surface_is_the_graffiti_on_);
+                clone.find(".card-created").text(v.creation_date);
+                
+                //clone.find(".card-title").addClass(v.results);
 
+                //clone.find(".card-title").attr("data-results", v.results);
 
+                //clone.find(".card-subtitle").text(v.facility_type);
 
-                clone.find(".card-title").addClass(v.results);
-
-                clone.find(".card-title").attr("data-results", v.results);
-
-                clone.find(".card-subtitle").text(v.facility_type);
-
-                if (v.violations) {
+                //if (v.violations) {
                   //clone.find(".card-text").text(v.violations);
-                } else {
-                  clone.find(".card-text").text("")
-                }
+               // } else {
+               //   clone.find(".card-text").text("")
+               // }
 
 
 
 
-                clone.removeClass("template")
-
+                clone.removeClass("template");
+                clone.addClass("result");
+                clone.show();
 
                 // insert into DOM
-                $("#cards").append(clone);*/
+                $("#cards").append(clone);
 
-              //});
+              });
 
 
               });
