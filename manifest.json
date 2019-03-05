@@ -1,0 +1,9 @@
+{
+  "name": "311 Service Requests",
+  "short_name": "311",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#2196F3",
+  "theme_color": "#2196F3"
+}
