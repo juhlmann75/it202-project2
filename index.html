@@ -14,6 +14,10 @@
 			display: none;
 			margin: 1em;
 		}
+       #map {
+        height: 600px;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
 	</style>
   </head>
   <body>
@@ -34,7 +38,7 @@
         <a class="nav-link" href="#list">List</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#map">Map</a>
+        <a class="nav-link" href="#mapdiv">Map</a>
       </li>
     </ul>
   </div>
@@ -73,10 +77,8 @@
         </div>
      </div>
   </div>
-  <div class="content" id="map">
-    <div id="desc">
-      
-      </div>
+  <div class="content" id="mapdiv">
+    <div id="map"></div>
   </div>
     
     <script>
@@ -126,12 +128,12 @@
 
 
           $.get(url, function(response) {
-              console.log(response);
+              //console.log(response);
 
               var data = response;
 
               $.each(data, function(i,v){
-                console.log(i,v);
+                //console.log(i,v);
 
                 // clone card
                 var clone = $(".template").clone();
@@ -141,6 +143,9 @@
                 clone.find(".card-location").text(v.where_is_the_graffiti_located_);
                 clone.find(".card-surface").text(v.what_type_of_surface_is_the_graffiti_on_);
                 clone.find(".card-created").text(v.creation_date);
+                if(v.hasOwnProperty("completion_date")){
+                    clone.find(".card-completed").text(v.completion_date);
+                }
                 
                 //clone.find(".card-title").addClass(v.results);
 
@@ -190,6 +195,50 @@
       });
 
     </script>
+      <script>
+// Initialize and add the map
+function initMap() {
+  // The location of Uluru
+  var chicago = {lat: 41.8781, lng: -87.6298};
+  // The map, centered at Uluru
+  var map = new google.maps.Map(
+      document.getElementById('map'), {zoom: 11, center: chicago});
 
+  $.get("https://data.cityofchicago.org/resource/cwig-ma7x.json?$limit=5",
+
+      function(response) {
+        console.log("in data callback");
+        var data = response;
+        createMarkers(map, data );
+      });
+
+}
+
+  function createMarkers (map, data) {
+    console.log(data);
+    $.each(data, function(i,v) {
+
+      var location = {lat: parseFloat(v.latitude), lng: parseFloat(v.longitude) }
+      
+      var marker = new google.maps.Marker({position: location, map: map});
+
+      var infowindow = new google.maps.InfoWindow({
+        content: v.dba_name
+      });
+
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
+
+    });
+
+  }
+
+
+
+    </script>
+     <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa4dMSOASs_iLQnhrPoQ8EZgj2Im_pZ7o&callback=initMap">
+    </script>
   </body>
 </html>
