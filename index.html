@@ -218,9 +218,17 @@ function initMap(data) {
       map.setCenter(location);  
         
       var marker = new google.maps.Marker({map: map, position: location});
-
+  
+      var contentWin = "<h5>" + v.street_address + "</h5>" +
+                "<h6>" + v.service_request_number + "</h6>" +
+                "<p>" + v.where_is_the_graffiti_located_+ "</p>" +
+                "<p>" + v.what_type_of_surface_is_the_graffiti_on_+ "</p>" +
+                "<p>" + v.creation_date+ "</p>";
+      if(v.hasOwnProperty("completion_date")){
+           contentWin += "<p>" + v.completion_date + "</p>";
+        }
       var infowindow = new google.maps.InfoWindow({
-        content: v.street_address
+        content: contentWin
       });
 
       marker.addListener('click', function() {
