@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html class="mdc-typography">
+  <head>
+    <meta charset="utf-8">
+    <link rel='manifest' href='./manifest.json'>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+	 crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+    <title>PWA Basic</title>
+      
+   <style>
+		.content {
+			display: none;
+			margin: 1em;
+		}
+	</style>
+  </head>
+  <body>
+
+    
+  	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#">Menu</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+        
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="#search">Search <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#list">List</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#map">Map</a>
+      </li>
+    </ul>
+  </div>
+  </nav>
+  
+  <div class="content" id="search" style="display:block;">
+      
+      <form>
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" class="form-control" id="title" placeholder="Title">
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" id="description" rows="3" placeholder="Description"></textarea>
+  </div>
+</form>
+    <button id="getFormData">Submit</button>
+  </div>
+  <div class="content" id="list">
+    <ul class="list-group" id="noteList">
+        
+      </ul>
+  </div>
+  <div class="content" id="map">
+    <div id="desc">
+      
+      </div>
+  </div>
+    
+    <script>
+        // register the service worker for offline use
+        /*if('serviceWorker' in navigator) {
+          navigator.serviceWorker
+                   .register('./sw.js')
+                   .then(function() { console.log("Service Worker Registered"); });
+        }
+        self.addEventListener('activate', function(event) {
+          event.waitUntil(
+            caches.keys().then(function(cacheNames) {
+              return Promise.all(
+                cacheNames.filter(function(cacheName) {
+                  // Return true if you want to remove this cache,
+                  // but remember that caches are shared across
+                  // the whole origin
+                }).map(function(cacheName) {
+                  return caches.delete(cacheName);
+                })
+              );
+            })
+          );
+        });*/
+    </script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+      
+
+    <script>
+      $(document).ready(function() {
+    
+        var url = "https://data.cityofchicago.org/resource/cdmx-wzbz.json";
+          
+         $("#getFormData").on("click", function() {
+        // clear the display
+        //$("#cards").empty();
+        //var searchString = $("#zip").val();
+       // console.log(searchString);
+        //var url = endpoint + "&zip=" + searchString;
+        //console.log(url);
+
+          $.get(url, function(response) {
+              console.log(response);
+
+
+              var data = response;
+
+             // $.each(data, function(i,v){
+                //console.log(i,v);
+/*
+                // clone card
+                var clone = $(".template").clone();
+                // update values
+                clone.find(".card-title").text(v.dba_name);
+
+
+
+                clone.find(".card-title").addClass(v.results);
+
+                clone.find(".card-title").attr("data-results", v.results);
+
+                clone.find(".card-subtitle").text(v.facility_type);
+
+                if (v.violations) {
+                  //clone.find(".card-text").text(v.violations);
+                } else {
+                  clone.find(".card-text").text("")
+                }
+
+
+
+
+                clone.removeClass("template")
+
+
+                // insert into DOM
+                $("#cards").append(clone);*/
+
+              //});
+
+
+              });
+
+          });
+          
+        function hideScreens() {
+          $(".content").hide();
+        }
+
+        $(".nav-link").on("click", function(){
+          hideScreens();
+          var target = $(this).attr("href");
+          $(target).show();
+        });
+          
+        $("#getFormData").on("click", function() {
+          
+        });
+        
+
+
+      });
+
+    </script>
+
+  </body>
+</html>
